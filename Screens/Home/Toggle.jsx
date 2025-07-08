@@ -1,0 +1,54 @@
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+
+const Toggle = ({ isPetrol, toggleSwitch, isdesale, isgas }) => {
+    return (
+        <TouchableOpacity
+            onPress={() => toggleSwitch()}
+            activeOpacity={0.8}
+            style={{
+                width: 120,
+                height: 40,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 10,
+                backgroundColor: isPetrol ? 'green' : 'lightgreen',
+                paddingHorizontal: 10,
+                borderRadius: 20,
+            }}
+        >
+
+            {isPetrol || isdesale || isgas ? (
+                <>
+                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>Petrol</Text>
+                    <View
+                        style={{
+                            height: 24,
+                            width: 24,
+                            backgroundColor: 'white',
+                            borderRadius: 12,
+                        }}
+                    />
+
+                </>
+            ) : (
+                <>
+                    <View
+                        style={{
+                            height: 24,
+                            width: 24,
+                            backgroundColor: 'white',
+                            borderRadius: 12,
+                        }}
+                    />
+                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>Petrol</Text>
+                </>
+            )}
+        </TouchableOpacity>
+    )
+}
+
+export default Toggle
+
+const styles = StyleSheet.create({})
