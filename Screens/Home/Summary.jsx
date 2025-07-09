@@ -1,9 +1,19 @@
-import { useRef } from 'react';
+import axios from 'axios';
+import { useEffect, useRef } from 'react';
 import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-const Summary = ({ navigation }) => {
+const Summary = ({ navigation, route }) => {
     const refRBSheet = useRef();
+    const { isPetrol, isDesel, isGas, vehicleNo, name, quantity, amount } = route.params;
+    console.log('Summary Page Params:', route.params);
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await axios.get('http://192.168.58.158:3000/summary');
+            console.log(res.data);
+        };
+        fetchData();
+    }, []);
 
     return (
         <View>
@@ -76,10 +86,10 @@ const Summary = ({ navigation }) => {
                         <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'green' }}>Vehicle Data and billing summary</Text>
                         <View style={{ marginTop: 20, alignItems: 'flex-start', justifyContent: 'center', gap: 10, width: 300, height: 100, backgroundColor: 'green', borderRadius: 10, padding: 10 }}>
                             <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                Vehicle Number: ABC1234
+                                Vehicle Number: {vehicleNo}
                             </Text>
                             <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                Customer Name: shaurya berawala
+                                Customer Name: {name}
                             </Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', width: '100%' }}>
                                 <Image
@@ -87,24 +97,24 @@ const Summary = ({ navigation }) => {
                                     style={{ width: 20, height: 20, borderRadius: 10 }}
                                 />
                                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                    : 00000000000
+                                    : 0000000000
                                 </Text>
                             </View>
                         </View>
                         <View style={{ marginTop: 20, alignItems: 'flex-start', justifyContent: 'center', gap: 10, width: 300, height: 100, backgroundColor: 'lightgreen', borderRadius: 10, padding: 10, borderWidth: 2 }}>
                             <Text style={{ color: 'green', fontSize: 16, fontWeight: 'bold' }}>
-                                Fuel Quantity: 12L
+                                Fuel Quantity: {quantity} Liters
 
                             </Text>
                             <Text style={{ color: 'green', fontSize: 16, fontWeight: 'bold' }}>
-                                Fuel Varient: Petrol
+                                Fuel Varient: {isPetrol ? 'Petrol' : isDesel ? 'Diesel' : 'Gas'}
                             </Text>
                             <Text style={{ color: 'green', fontSize: 16, fontWeight: 'bold' }}>
                                 Varient type: Power
                             </Text>
                             <View style={{ position: 'absolute', bottom: -10, left: 180, backgroundColor: 'green', padding: 5, borderRadius: 10 }}>
                                 <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                    Total : ₹ 1200
+                                    Total : {amount} Rs
                                 </Text>
                             </View>
                         </View>

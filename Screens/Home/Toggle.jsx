@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const Toggle = ({ isPetrol, toggleSwitch, isdesale, isgas }) => {
+const Toggle = ({ toggleSwitch, isOn, label }) => {
     return (
         <TouchableOpacity
             onPress={() => toggleSwitch()}
@@ -13,15 +13,15 @@ const Toggle = ({ isPetrol, toggleSwitch, isdesale, isgas }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 marginTop: 10,
-                backgroundColor: isPetrol ? 'green' : 'lightgreen',
+                backgroundColor: isOn ? 'green' : 'lightgreen',
                 paddingHorizontal: 10,
                 borderRadius: 20,
             }}
         >
 
-            {isPetrol || isdesale || isgas ? (
+            {isOn ? (
                 <>
-                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>Petrol</Text>
+                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}></Text>
                     <View
                         style={{
                             height: 24,
@@ -42,7 +42,7 @@ const Toggle = ({ isPetrol, toggleSwitch, isdesale, isgas }) => {
                             borderRadius: 12,
                         }}
                     />
-                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>Petrol</Text>
+                    <Text style={{ color: 'black', fontSize: 14, fontWeight: 'bold' }}>{label}</Text>
                 </>
             )}
         </TouchableOpacity>

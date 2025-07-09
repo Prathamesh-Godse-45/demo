@@ -2,13 +2,32 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toggle from './Toggle';
-const Dashboard = ({ navigation }) => {
-    const [isPetrol, setIsPetrol] = useState(false);
+import axios from 'axios';
+const Dashboard = ({ navigation, admin }) => {
+    const [isPetrol, setIsPetrol] = useState(true);
 
     const [isDesel, setIsDesel] = useState(false);
     const [isGas, setIsGas] = useState(false);
 
-    const toggleSwitch = () => setIsPetrol(previousState => !previousState);
+    const [isOn, setIsOn] = useState(false);
+    const [vehicleNo, setVehicleNo] = useState('');
+    const [name, setName] = useState('');
+    const [quantity, setQuantity] = useState('');
+    const [amount, setAmount] = useState('');
+
+    // const toggleSwitch = () => setIsPetrol(previousState => !previousState);
+
+    const onProceed = async () => {
+        try {
+
+            const res = await axios.post('http://192.168.58.158:3000/summary', { isPetrol, isDesel, isGas, vehicleNo, name, quantity, amount })
+            if (res) {
+                navigation.navigate('summary', { isPetrol, isDesel, isGas, vehicleNo, name, quantity, amount });
+            }
+        } catch (error) {
+            console.error('Error proceeding with fuel selection:', error);
+        }
+    };
 
     return (
         <View>
@@ -19,7 +38,7 @@ const Dashboard = ({ navigation }) => {
                     style={{ padding: 10, width: 500, height: 120, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 30 }}
                 >
                     <Image source={require('../../assets/profile.jpg')} style={{ width: 70, height: 70, borderRadius: 70 }} />
-                    <Text style={{ color: '#fff', fontSize: 20 }}> staff Dashboard</Text>
+                    <Text style={{ color: '#fff', fontSize: 20 }}> welcome {admin ? 'Admin' : 'Staff'} </Text>
                 </LinearGradient>
 
 
@@ -27,16 +46,18 @@ const Dashboard = ({ navigation }) => {
             <Text style={{ color: 'green', fontSize: 20 }}> Select fuel variant</Text>
             <View display='flex' style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, gap: 20 }}>
 
-                <Toggle isPetrol={isPetrol} toggleSwitch={toggleSwitch} isdesale={isDesel} isgas={isGas} />
-                <Toggle isPetrol={isPetrol} toggleSwitch={toggleSwitch} isdesale={isDesel} isgas={isGas} />
-                <Toggle isPetrol={isPetrol} toggleSwitch={toggleSwitch} isdesale={isDesel} isgas={isGas} />
+                <Toggle toggleSwitch={() => { setIsPetrol(!isPetrol); setIsDesel(false); setIsGas(false); }} isOn={isPetrol} label="Petrol" />
+                <Toggle toggleSwitch={() => { setIsDesel(!isDesel); setIsPetrol(false); setIsGas(false); }} isOn={isDesel} label="Diesel" />
+                <Toggle toggleSwitch={() => { setIsGas(!isGas); setIsPetrol(false); setIsDesel(false); }} isOn={isGas} label="Gas" />
 
             </View>
             <Text style={{ color: 'green', fontSize: 24, marginTop: 20 }}> Vehicle Details</Text>
             <View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
                     <TextInput
-                        placeholder='MH02XT0420'
+                        placeholder='Vehicle Number'
+                        value={vehicleNo}
+                        onChangeText={setVehicleNo}
                         style={{
                             backgroundColor: '#f0f0f0', width: 250,
                             padding: 10,
@@ -60,6 +81,8 @@ const Dashboard = ({ navigation }) => {
 
                     <TextInput
                         placeholder='Name'
+                        value={name}
+                        onChangeText={setName}
                         style={{
                             backgroundColor: '#f0f0f0', width: 250,
                             padding: 10,
@@ -83,7 +106,9 @@ const Dashboard = ({ navigation }) => {
                         <Text>Quantity</Text>
                     </View>
                     <TextInput
-                        placeholder='MH02XT0420'
+                        placeholder='Quantity'
+                        value={quantity}
+                        onChangeText={setQuantity}
                         style={{
                             backgroundColor: '#f0f0f0', width: 250,
                             padding: 10,
@@ -109,7 +134,9 @@ const Dashboard = ({ navigation }) => {
                         <Text>Amount</Text>
                     </View>
                     <TextInput
-                        placeholder='Name'
+                        placeholder='Amount'
+                        value={amount}
+                        onChangeText={setAmount}
                         style={{
                             backgroundColor: '#f0f0f0', width: 250,
                             padding: 10,
@@ -143,7 +170,7 @@ const Dashboard = ({ navigation }) => {
                 </View>
 
                 <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                    <TouchableOpacity onPress={() => navigation.navigate('summary')} style={{ backgroundColor: 'green', padding: 5, borderRadius: 20, width: 100, height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
+                    <TouchableOpacity onPress={() => onProceed()} style={{ backgroundColor: 'green', padding: 5, borderRadius: 20, width: 100, height: 40, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
                         <Text style={{ color: '#fff', fontSize: 20 }}>Proceed</Text>
                     </TouchableOpacity>
                 </View>

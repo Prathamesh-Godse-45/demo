@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableHighlight, StyleSheet } from 'react-native';
+import { View, Text, Image, TextInput, TouchableHighlight, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
 
 export default function LoginScreen({ navigation }) {
     const [admin, setAdmin] = useState(true);
     const [userType, setUserType] = useState('Admin');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
 
     const onPressUserType = (isAdminSelected) => {
         setAdmin(isAdminSelected);
         setUserType(isAdminSelected ? 'Admin' : 'Staff');
+    };
+
+    const handleLogin = async () => {
+        try {
+            const res = await axios.post('http://192.168.58.158:3000/login', {
+                userType,
+                phone,
+                password,
+
+            });
+            Alert.alert('Success', res.data.message);
+            navigation.navigate('dashboard', { admin });
+
+        } catch (err) {
+            Alert.alert('Error', err.response?.data?.message || 'Login failed');
+        }
     };
 
     return (
@@ -40,7 +59,9 @@ export default function LoginScreen({ navigation }) {
             <View style={{ flexDirection: 'column', gap: 20, alignItems: 'center' }}>
                 <TextInput
                     placeholder={userType == 'Admin' ? 'Admin Phone' : 'Staff Phone'}
-                    // value={userType}
+                    value={phone}
+                    onChangeText={setPhone}
+                    keyboardType="phone-pad"
                     style={{
                         backgroundColor: '#f0f0f0', width: 300,
                         padding: 10,
@@ -48,24 +69,31 @@ export default function LoginScreen({ navigation }) {
                         borderColor: 'green',
                         borderWidth: 2
                     }}
-                // editable={false}
                 />
-                <TextInput placeholder="Password" secureTextEntry style={{
-                    backgroundColor: '#f0f0f0', width: 300,
-                    padding: 10,
-                    borderRadius: 10,
-                    borderColor: 'green',
-                    borderWidth: 2
-                }} />
-
+                <TextInput
+                    placeholder="Password"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    style={{
+                        backgroundColor: '#f0f0f0', width: 300,
+                        padding: 10,
+                        borderRadius: 10,
+                        borderColor: 'green',
+                        borderWidth: 2
+                    }}
+                />
             </View>
+
             <View style={{ marginTop: 20, width: 300, alignItems: 'flex-start' }}>
                 <Text>Forgot password?</Text>
             </View>
+
             <View style={{ flexDirection: 'column', gap: 20, alignItems: 'center', marginTop: 30 }}>
-                <TouchableHighlight onPress={() => navigation.navigate('dashboard')} style={{ width: 250, height: 40, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center', borderRadius: 7 }} >
+                <TouchableHighlight onPress={handleLogin} style={{ width: 250, height: 40, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center', borderRadius: 7 }} >
                     <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff' }}>Login</Text>
                 </TouchableHighlight>
+
                 <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image
                         source={require('../../assets/arrow.png')}
@@ -76,8 +104,8 @@ export default function LoginScreen({ navigation }) {
                         source={require('../../assets/arrow.png')}
                         style={{ width: 150, height: 3, tintColor: 'black' }}
                     />
-
                 </View>
+
                 <TouchableHighlight onPress={() => navigation.navigate('register')} style={{ width: 250, height: 40, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center', borderRadius: 7 }} >
                     <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff' }}>Register</Text>
                 </TouchableHighlight>
@@ -92,5 +120,4 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
     },
-
 });
