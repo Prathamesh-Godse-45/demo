@@ -7,13 +7,13 @@ const Summary = ({ navigation, route }) => {
     const refRBSheet = useRef();
     const { isPetrol, isDesel, isGas, vehicleNo, name, quantity, amount } = route.params;
     console.log('Summary Page Params:', route.params);
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await axios.get('http://192.168.58.158:3000/summary');
-            console.log(res.data);
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const res = await axios.get('http://192.168.58.158:3000/summary');
+    //         console.log(res.data);
+    //     };
+    //     fetchData();
+    // }, []);
 
     return (
         <View>

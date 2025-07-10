@@ -15,13 +15,13 @@ export default function LoginScreen({ navigation }) {
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post('http://192.168.58.158:3000/login', {
-                userType,
-                phone,
-                password,
+            // const res = await axios.post('http://192.168.58.158:3000/login', {
+            //     userType,
+            //     phone,
+            //     password,
 
-            });
-            Alert.alert('Success', res.data.message);
+            // });
+            // Alert.alert('Success', res.data.message);
             navigation.navigate('dashboard', { admin });
 
         } catch (err) {
